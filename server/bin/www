@@ -1,0 +1,39 @@
+'use strict';
+
+let App = require('../server'),
+    client = require('mongodb').MongoClient,
+    dbInfo = require('../model/mongoInfo');
+
+let port;
+
+console.log(`connecting to MongoDB at ${dbInfo.url}`);
+
+client
+    .connect(dbInfo.url)
+    .then(db => {
+        console.log('...done');
+        let app = new App(db);
+        port = process.env.PORT || 8000;
+        app.set('port', port);
+        app.listen(port, function (err) {
+            if (err) onError(err);
+            else onListening(port);
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });
+
+function onError(error) {
+    if (error.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is already in use`);
+        process.exit(1);
+    } else {
+        throw error;
+    }
+}
+
+function onListening(port) {
+    console.log(`server listening on port ${port}`);
+}
