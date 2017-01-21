@@ -3,7 +3,7 @@
 let database = require('../model/database');
 
 let checkReg = {
-    name: /^[a-zA-Z ]\w{5,17}$/,
+    name: /^\w{6,18}$/,
     id: /^[a-zA-Z][a-zA-Z0-9_]{5,17}$/,
     phone: /^[1-9]\d{10}$/,
     mail: /^[a-zA-Z0-9_\\-]+@(([a-zA-Z0-9_\-])+\.)+[a-zA-Z]{2,4}$/,

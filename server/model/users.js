@@ -11,7 +11,7 @@ class User {
         this.id = id;
         this.phone = phone;
         this.mail = mail;
-        this.password = secure.encryptMD5(password).result;
+        this.pw = secure.encryptMD5(password).result;
     }
 }
 
@@ -31,9 +31,10 @@ class UserList {
                    .then(count => count > 0);
     }
 
-    regist({name, password, id, phone, mail}) {
+    regist({name, pw, id, phone, mail}) {
+        // TO-DO ： 似乎check被调用了两次，以后检查一下
         let that = this;
-        let user = new User(name, password, id, phone, mail);
+        let user = new User(name, pw, id, phone, mail);
         return that.checkExist(user)
                    .then(function (result) {
                        if (result)
@@ -41,12 +42,16 @@ class UserList {
                        else
                            return that.col
                                       .insertOne(user)
-                   });
+                   })
+                   .then(() => user) // 注册成功后返回user实例
+                   .catch(err => null);// 失败返回null
     }
 
-    login(name, password) {
+    login(id, password) {
         let _password = secure.encryptMD5(password).result;
-        return this.getUser({name: name, password: _password});
+        console.log(`pre:${password}, after:${_password}`);
+        return this.getUser({id, pw: _password});
+        // 登录成功也返回user实例
     }
 
     getUser(param) {
@@ -55,6 +60,12 @@ class UserList {
                    .limit(1)
                    .toArray()
                    .then(arr => arr.length ? arr[0] : null);
+    }
+
+    count() {
+        return this.col
+                   .find()
+                   .count();
     }
 }
 

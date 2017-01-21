@@ -10,11 +10,11 @@ router
             // has auto logged in
             res.json(res.locals.user);
         } else {
-            if (req.body.name && req.body.password) {
-                users.login(req.body.name, req.body.password)
+            if (req.body.id && req.body.pw) {
+                users.login(req.body.id, req.body.pw)
                      .then(function (user) {
                          if (!!user) {
-                             req.session.name = user.name;
+                             req.session.uid = user.id;
                              res.json(user);
                          } else {
                              res.json(null);

@@ -4,10 +4,10 @@ let express = require("express");
 let router = express.Router();
 
 let checker = require('../model/check');
-let database = require('../model/database');
 
 router
     .post('/', function (req, res, next) {
+        let database = req.app.locals.db;
         checker.allCheck(req.body, req.app.locals.db)
                .then(function (result) {
                    if (result) {
@@ -15,9 +15,11 @@ router
                    } else
                        return Promise.reject(new Error('invalid data!'));
                })
-               .then(function () {
-                   req.session.name = req.body.name;
-                   res.send('ok');
+               .then(function (user) {
+                   if (user) {
+                       req.session.uid = user.id;
+                   }
+                   res.json(user);
                })
                .catch(err => next(err));
     });

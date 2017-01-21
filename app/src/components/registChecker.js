@@ -24,21 +24,21 @@ export default function (vm) {
                 trigger: 'blur',
                 validator (rule, value, callback)  {
                     if (value.length < 6 || value.length > 18) {
-                        callback(new Error('用户名长度应在6~18之间'));
+                        callback(new Error('账号长度应在6~18之间'));
                         return;
                     }
                     if (!(value[0] >= 'a' && value[0] <= 'z' || value[0] >= 'A' && value[0] <= 'Z')) {
-                        callback(new Error('用户名必须以英文字母开头'));
+                        callback(new Error('账号必须以英文字母开头'));
                         return;
                     }
                     if (!value.match(/^[a-zA-Z0-9_]{6,18}$/)) {
-                        callback(new Error('用户名只能包含英文字母、数字与下划线'));
+                        callback(new Error('账号只能包含英文字母、数字与下划线'));
                         return;
                     }
                     ajaxCheck('id', value)
                         .then(res => {
                             if (res) callback();
-                            else callback(new Error('用户名已存在'));
+                            else callback(new Error('账号已存在'));
                         })
                         .catch(err => callback(new Error('数据错误')));
                 }
@@ -83,15 +83,11 @@ export default function (vm) {
                         callback(new Error('用户名长度应在6~18之间'));
                         return;
                     }
-                    if (!(value[0] >= 'a' && value[0] <= 'z' || value[0] >= 'A' && value[0] <= 'Z')) {
-                        callback(new Error('用户名必须以英文字母开头'));
-                        return;
-                    }
                     if (!value.match(/^[a-zA-Z0-9_]{6,18}$/)) {
                         callback(new Error('用户名只能包含英文字母、数字与下划线'));
                         return;
                     }
-                    ajaxCheck('id', value)
+                    ajaxCheck('name', value)
                         .then(res => {
                             if (res) callback();
                             else callback(new Error('用户名已存在'));
@@ -101,8 +97,42 @@ export default function (vm) {
             }
         ],
         mail: [
-            {required: true, message: '请输入邮箱', trigger: 'blur'}
+            {required: true, message: '请输入邮箱', trigger: 'blur'},
+            {
+                trigger: 'blur',
+                validator (rule, value, callback)  {
+                    if (!value.match(/^[a-zA-Z0-9_\\-]+@(([a-zA-Z0-9_\-])+\.)+[a-zA-Z]{2,4}$/)) {
+                        callback(new Error('邮箱格式不正确'));
+                        return;
+                    }
+                    ajaxCheck('mail', value)
+                        .then(res => {
+                            if (res) callback();
+                            else callback(new Error('邮箱已存在'));
+                        })
+                        .catch(err => callback(new Error('数据错误')));
+                }
+            }
         ],
-        phone: []
+        phone: [
+            {
+                trigger: 'blur',
+                validator (rule, value, callback)  {
+                    if (value === '') {
+                        callback();
+                        return;
+                    }
+                    if (!value.match(/^[1-9]\d{10}$/)) {
+                        callback(new Error('手机号不正确'));
+                        return;
+                    }
+                    ajaxCheck('phone', value)
+                        .then(res => {
+                            if (res) callback();
+                            else callback(new Error('手机号已存在'));
+                        })
+                        .catch(err => callback(new Error('数据错误')));
+                }
+            }]
     };
 };

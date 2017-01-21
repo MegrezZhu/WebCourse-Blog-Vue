@@ -1,6 +1,6 @@
 <template>
     <el-dropdown @command="handleCommand" type="info">
-        <el-button type="text">
+        <el-button type="text" :loading="logging">
             {{isLogged ? user.name : '未登录'}}<i class="el-icon-caret-bottom el-icon--right"></i>
         </el-button>
         <el-dropdown-menu slot="dropdown">
@@ -9,7 +9,7 @@
                 <el-dropdown-item style="text-align: center" command="regist" divided>注册</el-dropdown-item>
             </template>
             <template v-else>
-                <el-dropdown-item style="text-align: center" command="/detail">详情</el-dropdown-item>
+                <el-dropdown-item style="text-align: center" command="detail">详情</el-dropdown-item>
                 <el-dropdown-item style="text-align: center" command="logout" divided>登出</el-dropdown-item>
             </template>
         </el-dropdown-menu>
@@ -35,6 +35,9 @@
             },
             regist(){
                 this.$store.commit('dialog', {name: 'regist', to: true});
+            },
+            detail(){
+                this.$router.push('/userdetail');
             }
         },
         computed: {
@@ -43,6 +46,9 @@
             },
             user() {
                 return this.$store.state.user;
+            },
+            logging(){
+                return this.$store.state.logging;
             }
         }
     };
@@ -59,5 +65,9 @@
 
     .el-button {
         padding-right: 10px;
+    }
+
+    .el-button.is-loading:before {
+        background-color: transparent;
     }
 </style>

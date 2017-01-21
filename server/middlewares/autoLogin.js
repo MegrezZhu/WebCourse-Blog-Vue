@@ -2,8 +2,8 @@
 
 const autoLogin = function (req, res, next) {
     let users = req.app.locals.db.users;
-    if (!!req.session.name) {
-        users.getUser({name: req.session.name})
+    if (!!req.session.uid) {
+        users.getUser({id: req.session.uid})
              .then(user => {
                  res.locals.user = user;
                  next();

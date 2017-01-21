@@ -12,6 +12,11 @@ const store = new Vuex.Store({
         dialogs: {
             login: false,
             regist: false
+        },
+        logging: false,
+        statis: {
+            userNum: 0,
+            articleNum: 0
         }
     },
     mutations: {
@@ -28,21 +33,37 @@ const store = new Vuex.Store({
     },
     actions: {
         login({state, commit}, info) {
+            state.logging = true;
             axios
                 .post('/api/login', info)
                 .then(({data}) => {
                     commit('updateUser', data);
+                    state.logging = false;
                 })
                 .catch(err => {
+                    state.logging = false;
                     console.log('err', err);
                 });
         },
         logout({state, commit}){
+            state.logging = true;
             axios
-                .post('/api/logout')
+                .get('/api/logout', null)
                 .then(() => {
                     commit('updateUser', null);
+                    state.logging = false;
                 });
+        },
+        syncStatis({state}){
+            let userNumP = axios.get('/api/statis/usercount')
+                                .then(({data}) => {
+                                    state.statis.userNum = data;
+                                });
+            let articleNumP = axios.get('/api/statis/articlecount')
+                                   .then(({data}) => {
+                                       state.statis.articleNum = data;
+                                   });
+            return axios.all([userNumP, articleNumP]);
         }
     }
 });

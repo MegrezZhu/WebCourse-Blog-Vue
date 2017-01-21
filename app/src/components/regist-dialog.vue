@@ -6,7 +6,7 @@
                 <el-form ref="registForm" :model="form" label-width="80px" label-position="top" v-loading="loading"
                          :rules="rules">
                     <el-form-item label="账号" prop="id">
-                        <el-input v-model="form.id" size="large"></el-input>
+                        <el-input v-model="form.id" size="large" autofocus></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="pw">
                         <el-input v-model="form.pw" size="large" type="password"></el-input>
@@ -65,6 +65,29 @@
             regist(){
                 this.$refs['registForm']
                     .validate(valid => {
+                        let vm = this;
+                        if (!valid) return;
+                        let data = Object.assign({}, vm.form);
+                        data.pw = crypto.MD5(data.pw).toString();
+                        data.checkpw = crypto.MD5(data.checkpw).toString();
+                        vm.loading = true;
+                        axios
+                            .post('/api/regist', data)
+                            .then(({data}) => {
+                                vm.loading = false;
+                                if (data) {
+                                    vm.$notify.success({title: '注册成功', duration: 1000});
+                                    vm.$store.commit('updateUser', data);
+                                    vm.close();
+                                } else {
+                                    vm.loading = false;
+                                    vm.$notify.error({title: '未知错误'});
+                                }
+                            })
+                            .catch(err => {
+                                    vm.loading = false;
+                                vm.$notify.error({title: '未知错误'});
+                            })
                     });
             },
             close(){
@@ -72,6 +95,16 @@
                     name: 'regist', to: false
                 });
             }
+        },
+        created(){
+            this.$store
+                .watch(state => state.dialogs.regist, (newV, oldV) => {
+                    if (newV === false) {
+                        this.$refs
+                            .registForm
+                            .resetFields();
+                    }
+                });
         }
     }
 </script>

@@ -4,8 +4,9 @@ let express = require('express');
 let router = express.Router();
 
 router
-    .post('/', function (req, res) {
+    .get('/', function (req, res) {
         req.session.destroy();
+        res.end();
     });
 
 module.exports = router;

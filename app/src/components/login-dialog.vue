@@ -6,7 +6,7 @@
                 <el-form ref="loginForm" :model="form" label-width="80px" label-position="top" v-loading="loading"
                          :rules="rules">
                     <el-form-item label="账号" prop="id">
-                        <el-input v-model="form.id" size="large"></el-input>
+                        <el-input v-model="form.id" size="large" autofocus></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="pw">
                         <el-input v-model="form.pw" size="large" type="password"></el-input>
@@ -61,16 +61,17 @@
                         vm.loading = true;
                         axios
                             .post('/api/login', {
-                                name: vm.form.id,
-                                password: crypto.MD5(vm.form.pw).toString()
+                                id: vm.form.id,
+                                pw: crypto.MD5(vm.form.pw).toString()
                             })
                             .then(({data}) => {
                                 vm.loading = false;
                                 if (data) {
-                                    vm.$notify.success({title: '登录成功'});
+                                    vm.$notify.success({title: '登录成功', duration: 1000});
                                     vm.$store.commit('updateUser', data);
+                                    vm.close();
                                 } else {
-                                    vm.$notify.warning('账号或密码错误');
+                                    vm.$notify.warning({title: '账号或密码错误', duration: 1000});
                                 }
                             })
                             .catch(err => {
@@ -83,6 +84,16 @@
                     name: 'login', to: false
                 });
             }
+        },
+        created(){
+            this.$store
+                .watch(state => state.dialogs.login, (newV, oldV) => {
+                    if (newV === false) {
+                        this.$refs
+                            .loginForm
+                            .resetFields();
+                    }
+                });
         }
     }
 </script>

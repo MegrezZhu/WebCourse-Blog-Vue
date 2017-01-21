@@ -2,7 +2,8 @@
 
 let info = require('./mongoInfo'),
     client = require('mongodb').MongoClient,
-    Users = require('./users');
+    Users = require('./users'),
+    Articles = require('./articles');
 
 class Database {
     constructor() {
@@ -21,6 +22,7 @@ class Database {
     setDB(db) {
         this.db = db;
         this.users = new Users(db);
+        this.articles = new Articles(db);
         return this;
     }
 
