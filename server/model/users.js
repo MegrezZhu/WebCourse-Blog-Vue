@@ -4,6 +4,7 @@ let mongodb = require('mongodb');
 let secure = require('./secure');
 let client = mongodb.MongoClient;
 let serverUrl = require('./mongoInfo').url;
+let lodash = require('lodash');
 
 class User {
     constructor(name, password, id, phone, mail) {
@@ -60,6 +61,14 @@ class UserList {
                    .limit(1)
                    .toArray()
                    .then(arr => arr.length ? arr[0] : null);
+    }
+
+    getUserInfo(id, argNames) {
+        return this.col
+                   .find({id})
+                   .limit(1)
+                   .toArray()
+                   .then(arr => arr[0] ? lodash.pick(arr[0], argNames) : null);
     }
 
     count() {

@@ -5,12 +5,13 @@
         </el-button>
         <el-dropdown-menu slot="dropdown">
             <template v-if="!isLogged">
-                <el-dropdown-item style="text-align: center" command="login">登录</el-dropdown-item>
-                <el-dropdown-item style="text-align: center" command="regist" divided>注册</el-dropdown-item>
+                <el-dropdown-item command="login">登录</el-dropdown-item>
+                <el-dropdown-item command="regist" divided>注册</el-dropdown-item>
             </template>
             <template v-else>
-                <el-dropdown-item style="text-align: center" command="detail">详情</el-dropdown-item>
-                <el-dropdown-item style="text-align: center" command="logout" divided>登出</el-dropdown-item>
+                <el-dropdown-item command="write">发布</el-dropdown-item>
+                <el-dropdown-item command="detail">详情</el-dropdown-item>
+                <el-dropdown-item command="logout" divided>登出</el-dropdown-item>
             </template>
         </el-dropdown-menu>
     </el-dropdown>
@@ -37,8 +38,12 @@
                 this.$store.commit('dialog', {name: 'regist', to: true});
             },
             detail(){
-                this.$router.push('/userdetail');
+                this.$router.push(`/user/${this.$store.state.user.id}`);
+            },
+            write(){
+                this.$store.commit('dialog', {name: 'article', to: true});
             }
+
         },
         computed: {
             isLogged(){
@@ -69,5 +74,9 @@
 
     .el-button.is-loading:before {
         background-color: transparent;
+    }
+
+    .el-dropdown-menu__item {
+        text-align: center;
     }
 </style>

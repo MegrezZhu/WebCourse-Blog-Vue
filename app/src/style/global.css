@@ -12,6 +12,22 @@
     align-items: center;
 }
 
+.row-flow-flexbox-start {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .column-flow-flexbox > *, .row-flow-flexbox * {
     margin: 5px;
+}
+
+.splitter {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: rgb(209, 219, 229);
+    margin: 10px 5px;
+    transform: scaleY(0.5);
 }

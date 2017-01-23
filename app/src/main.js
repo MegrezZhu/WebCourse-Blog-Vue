@@ -13,6 +13,12 @@ import store from  './store';
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 
+// small components
+import splitter from './components/splitter.vue';
+import userLink from './components/user-link.vue';
+Vue.component('splitter', splitter);
+Vue.component('user-link', userLink);
+
 // assign Vue instance to windows for console debugging
 window.Vue = new Vue({
     el: '#app',

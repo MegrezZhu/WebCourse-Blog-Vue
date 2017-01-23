@@ -11,7 +11,8 @@ const store = new Vuex.Store({
         user: null,
         dialogs: {
             login: false,
-            regist: false
+            regist: false,
+            article: false
         },
         logging: false,
         statis: {

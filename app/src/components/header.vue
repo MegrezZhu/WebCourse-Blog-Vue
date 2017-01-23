@@ -14,7 +14,6 @@
                         title="blog"
                         :router="true">
                     <el-menu-item index="/">首页</el-menu-item>
-                    <el-menu-item index="/articles">文章</el-menu-item>
                     <el-menu-item index="/about">About</el-menu-item>
                 </el-menu>
             </el-col>
@@ -24,6 +23,7 @@
         </el-row>
         <my-login-dialog></my-login-dialog>
         <my-regist-dialog></my-regist-dialog>
+        <my-write-dialog></my-write-dialog>
     </div>
 </template>
 
@@ -31,6 +31,7 @@
     import userInfo from './header-user-info.vue';
     import myLoginDialog from './login-dialog.vue';
     import myRegistDialog from './regist-dialog.vue';
+    import myWriteDialog from './article-dialog.vue';
 
     export default {
         data() {
@@ -45,7 +46,8 @@
         components: {
             myUserInfo: userInfo,
             myLoginDialog,
-            myRegistDialog
+            myRegistDialog,
+            myWriteDialog
         },
         computed: {
         }

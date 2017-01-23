@@ -1,11 +1,11 @@
 <template>
-    <div class="avatar" @mouseenter="cover = true" @mouseleave="cover = false">
+    <div class="avatar my-avatar" @mouseenter="cover = true" @mouseleave="cover = false">
         <transition name="fade">
-            <div class="cover row-flow-flexbox" v-if="cover">
+            <div class="cover row-flow-flexbox" v-if="black">
                 <el-button type="info">button!</el-button>
             </div>
         </transition>
-        <img :src="url">
+        <img src="https://cdn4.iconfinder.com/data/icons/iconsimple-logotypes/512/github-512.png">
     </div>
 </template>
 
@@ -15,7 +15,13 @@
             cover: false
         }),
         props: {
-            url: {type: String, required: true}
+//            url: {type: String, required: true},
+            hover: {type: Boolean, default: false}
+        },
+        computed: {
+            black(){
+                return this.cover && this.hover;
+            }
         },
         methods: {
             mouseover(){
@@ -49,8 +55,8 @@
     }
 
     /*.avatar:hover .cover {*/
-        /*display: block;*/
-        /*opacity: 1;*/
+    /*display: block;*/
+    /*opacity: 1;*/
     /*}*/
 
     .fade-enter, .fade-leave-active {
@@ -59,5 +65,10 @@
 
     .fade-enter-active, .fade-leave-active {
         transition: opacity 0.2s;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
     }
 </style>

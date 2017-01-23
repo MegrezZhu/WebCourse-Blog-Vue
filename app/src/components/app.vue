@@ -32,7 +32,7 @@
             setTimeout(function sync() {
                 vm.$store
                   .dispatch('syncStatis')
-                  .then(() => setTimeout(sync, 5000))
+                  .then(() => setTimeout(sync, 60000))
                   .catch(err => console.warn('自动同步数据时出现错误，停止自动同步'));
             }, 0);
         }

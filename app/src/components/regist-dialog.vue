@@ -14,9 +14,6 @@
                     <el-form-item label="重复密码" prop="checkpw">
                         <el-input v-model="form.checkpw" size="large" type="password"></el-input>
                     </el-form-item>
-                    <el-form-item label="用户名" prop="name">
-                        <el-input v-model="form.name" size="large"></el-input>
-                    </el-form-item>
                     <el-form-item label="邮箱" prop="mail">
                         <el-input v-model="form.mail" size="large"></el-input>
                     </el-form-item>
@@ -55,7 +52,7 @@
     export default{
         data(){
             return {
-                form: {id: '', pw: '', checkpw: '', mail: '', phone: '', name: ''},
+                form: {id: '', pw: '', checkpw: '', mail: '', phone: ''},
                 loading: false,
                 rules: new Rules(this)
             }

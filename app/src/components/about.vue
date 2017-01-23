@@ -20,6 +20,7 @@
                             </a>
                         </div>
                     </div>
+                    <splitter :weight="1"></splitter>
                     <div>{{userNum}}</div>
                     <p>已注册用户数量：<span>{{$store.state.statis.userNum}}</span></p>
                     <p>文章数量：<span>{{$store.state.statis.articleNum}}</span></p>

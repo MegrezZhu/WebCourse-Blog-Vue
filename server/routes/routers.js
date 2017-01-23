@@ -13,5 +13,7 @@ router
     .use('/api/regist', require('./regist'))
     .use('/api/registCheck', require('./check'))
     .use('/api/statis', require('./statis'))
+    .use('/api/users', require('./users'))
+    .use('/api/articles', require('./articles'))
 
 module.exports = router;
