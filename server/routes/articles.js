@@ -5,6 +5,13 @@ let checker = require('../model/check');
 
 let router = express.Router();
 
+const authorize = async function (user, commId, db, adminPass) {
+    if (!user) return false;
+    if (user.isAdmin && adminPass) return true;
+    let {author} = await db.getArticle(commId, ['author']);
+    return user.id === author.id;
+}
+
 router
     .post('/new', function (req, res, next) {
         let data = req.body;
@@ -35,11 +42,60 @@ router
         let {id, keys} = req.body,
             arti = req.app.locals.db.articles;
         try {
-            let _keys = {};
-            res.json(await arti.getArticle(id, keys));
+            if (keys.indexOf('hide') === -1) keys.push('hide');
+            let data = await arti.getArticle(id, keys);
+            let user = res.locals.user;
+            if (data.hide && (!user || user && !user.isAdmin))
+                data.title = data.content = undefined;
+            res.json(data);
         } catch (err) {
             next(err);
         }
-    });
+    })
+    .post('/delete', async function (req, res, next) {
+        try {
+            let {id} = req.body,
+                user = res.locals.user,
+                db = req.app.locals.db.articles;
+            if (!await authorize(user, id, db)) {
+                res.json(false);
+            } else {
+                let result = await db.removeArticle(id);
+                res.json(true);
+            }
+        } catch (err) {
+            next(err);
+        }
+    })
+    .post('/edit', async function (req, res, next) {
+        try {
+            let {id, content} = req.body,
+                user = res.locals.user,
+                db = req.app.locals.db.articles;
+            if (!await authorize(user, id, db)) {
+                res.json(false);
+            } else {
+                let result = await db.editArticle(id, {content});
+                res.json(true);
+            }
+        } catch (err) {
+            next(err);
+        }
+    })
+    .post('/hide', async function (req, res, next) {
+        try {
+            let {id, hide} = req.body,
+                user = res.locals.user,
+                db = req.app.locals.db.articles;
+            if (!await authorize(user, id, db, true)) {
+                res.json(false);
+            } else {
+                let result = await db.editArticle(id, {hide});
+                res.json(true);
+            }
+        } catch (err) {
+            next(err);
+        }
+    })
 
 module.exports = router;

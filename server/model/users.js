@@ -7,12 +7,13 @@ let serverUrl = require('./mongoInfo').url;
 let lodash = require('lodash');
 
 class User {
-    constructor(name, password, id, phone, mail) {
+    constructor(name, password, id, phone, mail, isAdmin) {
         this.name = name;
         this.id = id;
         this.phone = phone;
         this.mail = mail;
         this.pw = secure.encryptMD5(password).result;
+        this.isAdmin = isAdmin;
     }
 }
 
@@ -35,7 +36,7 @@ class UserList {
     regist({name, pw, id, phone, mail}) {
         // TO-DO ： 似乎check被调用了两次，以后检查一下
         let that = this;
-        let user = new User(name, pw, id, phone, mail);
+        let user = new User(name, pw, id, phone, mail, false);
         return that.checkExist(user)
                    .then(function (result) {
                        if (result)

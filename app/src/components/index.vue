@@ -1,7 +1,7 @@
 <template>
     <my-body>
         <div>
-            <my-article-list :data="data" v-loading="loading"></my-article-list>
+            <my-article-list :data="data" v-loading="loading" @removed="removed"></my-article-list>
             <el-pagination layout="prev,pager,next" :total="$store.state.statis.articleNum"
                            :page-size="pageSize" @current-change="change"></el-pagination>
         </div>
@@ -51,6 +51,9 @@
             change(newPage) {
                 this.page = newPage;
                 this.fetchData();
+            },
+            removed(index) {
+                this.data.splice(index, 1);
             }
         }
     }

@@ -16,8 +16,11 @@ Vue.use(VueRouter);
 // small components
 import splitter from './components/splitter.vue';
 import userLink from './components/user-link.vue';
+import timer from './components/time.vue';
+
 Vue.component('splitter', splitter);
 Vue.component('user-link', userLink);
+Vue.component('my-time', timer);
 
 // assign Vue instance to windows for console debugging
 window.Vue = new Vue({

@@ -6,7 +6,7 @@
                 <el-form ref="loginForm" :model="form" label-width="80px" label-position="top" v-loading="loading"
                          :rules="rules">
                     <el-form-item label="账号" prop="id">
-                        <el-input v-model="form.id" size="large" autofocus></el-input>
+                        <el-input v-model="form.id" size="large" :autofocus="true"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="pw">
                         <el-input v-model="form.pw" size="large" type="password"></el-input>

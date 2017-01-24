@@ -5,6 +5,7 @@ const autoLogin = function (req, res, next) {
     if (!!req.session.uid) {
         users.getUser({id: req.session.uid})
              .then(user => {
+                 user.pw = undefined;
                  res.locals.user = user;
                  next();
              });

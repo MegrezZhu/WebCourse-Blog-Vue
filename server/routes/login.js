@@ -14,6 +14,7 @@ router
                 users.login(req.body.id, req.body.pw)
                      .then(function (user) {
                          if (!!user) {
+                             user.pw = undefined;
                              req.session.uid = user.id;
                              res.json(user);
                          } else {

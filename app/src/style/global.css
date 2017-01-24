@@ -31,3 +31,9 @@
     margin: 10px 5px;
     transform: scaleY(0.5);
 }
+
+
+.minor-text {
+    font-size: 0.8em;
+    color: rgb(180, 180, 180);
+}

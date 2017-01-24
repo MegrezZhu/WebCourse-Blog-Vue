@@ -54,6 +54,8 @@
                     })
                     .then(({data}) => {
                         vm.$notify.success({title: '发布成功', duration: 1000});
+                        vm.$refs.articleForm.reset();
+                        vm.$store.commit('dialog', {name: 'article',to:false});
                         vm.loading = false;
                     })
                     .catch(() => {

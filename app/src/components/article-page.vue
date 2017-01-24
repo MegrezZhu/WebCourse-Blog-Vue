@@ -20,9 +20,24 @@
             <el-card class="comments" v-loading="loading">
                 <div slot="header" class="comments-header">
                     <span>评论</span>
-                    <el-button type="primary" @click="newComment">发表评论</el-button>
+                    <el-button type="primary" @click="dialog=true" >发表评论</el-button>
+                    <el-dialog v-model="dialog" size="tiny" title="发表评论" top="30%" @close="commentContent=''">
+                        <div>
+                            <el-input
+                                    v-model="commentContent"
+                                    type="textarea"
+                                    class="comment-input"
+                                    :autosize="{minRows:2, maxRows:10}"
+                                    autofocus
+                                    v-loading="sending"></el-input>
+                            <div class="buttons">
+                                <el-button type="primary" size="large" @click="send" :loading="sending">发表</el-button>
+                                <el-button size="large" @click="close" :disabled="sending">取消</el-button>
+                            </div>
+                        </div>
+                    </el-dialog>
                 </div>
-                <my-comment v-for="commId in comments" :cid="commId"></my-comment>
+                <my-comment v-for="(commId,index) in comments" :cid="commId" @removed="comments.splice(index,1)" :articleId="articleId" :key="commId"></my-comment>
             </el-card>
         </div>
     </my-body>
@@ -41,6 +56,9 @@
                 aLoading: false,
                 article: {},
                 comments: [],
+                dialog: false,
+                sending: false,
+                commentContent: ''
             }
         },
         computed: {
@@ -75,17 +93,30 @@
                         vm.$notify.error({title: '未知错误', duration: 1000});
                     })
             },
-            newComment() {
+            close() {
+                this.dialog = false;
+            },
+            send() {
                 let vm = this;
-                vm.$prompt(' ', '发表评论', {
-                    confirmButtonText: '发表',
-                    cancelButtonText: '取消',
-                    inputPattern: /./,
-                    inputErrorMessage: '不能为空'
-                }).then(({value}) => {
-
-                }).catch(() => {
-                });
+                vm.sending = true;
+                axios
+                    .post('/api/comments/new', {
+                        articleId: vm.articleId,
+                        date: new Date().valueOf(),
+                        content: vm.commentContent
+                    })
+                    .then(({data}) => {
+                        if (data) {
+                            vm.comments.push(data);
+                            vm.sending = false;
+                            vm.$notify.success({title: '发表成功', duration: 1000});
+                            vm.dialog = false;
+                        } else
+                            throw new Error('comment: null');
+                    })
+                    .catch(err => {
+                        vm.$notify.error({title: '未知错误', duration: 1000})
+                    });
             }
         },
         watch: {
@@ -94,9 +125,17 @@
             }
         },
         created(){
-            this.fetchData();
+            let vm = this;
+            vm.fetchData();
+
+            window.addEventListener('keydown', function (e) {
+                if (!vm.dialog) return;
+                if (e.ctrlKey && (e.keyCode || e.which) === 13) {
+                    vm.send();
+                }
+            });
         },
-        components: {myBody, myComment}
+        components: {myBody, myComment},
     }
 </script>
 
@@ -140,19 +179,19 @@
         min-height: 40px;
     }
 
-    .comments-header .el-button {
+    .comments-header > .el-button {
         position: absolute;
         right: 0;
     }
 
-    /*.comments-header {*/
-    /*width: 100%;*/
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-content: center;*/
-    /*}*/
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+    }
 
-    /*.comments-header .el-button {*/
-    /*align-self: flex-end;*/
-    /*}*/
+    .buttons .el-button {
+        margin: 10px 0 10px 10px;
+        /*padding: 10px 20px;*/
+    }
+
 </style>

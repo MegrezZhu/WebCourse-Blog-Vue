@@ -1,6 +1,7 @@
 <template>
     <div class="my-article-list">
-        <my-article-card v-for="info in data" :articleId="info.id" :hide="info.hide"></my-article-card>
+        <my-article-card v-for="(info,index) in data" :articleId="info.id" :hide="info.hide" :key="info.id"
+            @removed="$emit('removed', index)"></my-article-card>
     </div>
 </template>
 

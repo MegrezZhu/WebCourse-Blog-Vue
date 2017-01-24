@@ -15,5 +15,6 @@ router
     .use('/api/statis', require('./statis'))
     .use('/api/users', require('./users'))
     .use('/api/articles', require('./articles'))
+    .use('/api/comments', require('./comments'))
 
 module.exports = router;

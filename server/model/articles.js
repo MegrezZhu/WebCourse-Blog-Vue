@@ -54,7 +54,7 @@ class Articles {
                                .insertOne(comm)
                                .then(({insertedId}) => insertedId)
         await this.arti
-                  .updateOne({_id: articleId}, {
+                  .updateOne({_id: new ObjectID(articleId)}, {
                       $push: {
                           comments: commId
                       }
@@ -66,7 +66,7 @@ class Articles {
         if (edit.content || edit.title)
             edit.lastEditDate = new Date().valueOf();
         await this.arti
-                  .updateOne({_id: articleId}, {
+                  .updateOne({_id: new ObjectID(articleId)}, {
                       $set: edit
                   });
     }
@@ -75,19 +75,30 @@ class Articles {
         if (edit.content)
             edit.lastEditDate = new Date().valueOf();
         await this.comm
-                  .updateOne({_id: commId}, {
+                  .updateOne({_id: new ObjectID(commId)}, {
                       $set: edit
                   });
     }
 
     async removeArticle(articleId) {
+        let {comments} = await this.arti
+                                   .find({_id: new ObjectID(articleId)}, {comments: 1});
+        let param = {$or: []};
+        comments.forEach(commId => param.$or.push(new ObjectID(commId)));
+        await this.comm
+                  .removeMany(param);
         await this.arti
-                  .removeOne({_id: articleId});
+                  .removeOne({_id: new ObjectID(articleId)});
     }
 
-    async removeComment(commId) {
+    async removeComment(commId, articleId) {
         await this.comm
-                  .removeOne({_id: commId});
+                  .removeOne({_id: new ObjectID(commId)});
+        let {comments} = await this.arti
+                                   .findOne({_id: new ObjectID(articleId)}, {_id: 0, comments: 1});
+        comments.splice(comments.map(obj => obj.toString()).indexOf(commId), 1);
+        await this.arti
+                  .updateOne({_id: new ObjectID(articleId)}, {$set: {comments}});
     }
 
     async getArticle(articleId, keys) {
@@ -107,19 +118,22 @@ class Articles {
         } else _param = param;
         let param2 = {};
         keys.forEach(key => param2[key] = 1);
-        let arr = await this.arti
-                            .find(_param, param2)
-                            .skip(skip)
-                            .limit(num ? num : 100)
-                            .toArray();
+        let arr = await
+            this.arti
+                .find(_param, param2)
+                .skip(skip)
+                .limit(num ? num : 100)
+                .toArray();
         return arr;
     }
 
-    async getComments(commIds) {
+    async getComment(commId, keys) {
+        let param2 = {};
+        keys.forEach(key => param2[key] = 1);
         let arr = await this.comm
-                            .find({$or: commIds.map(id => ({_id: id}))})
+                            .find({_id: new ObjectID(commId)})
                             .toArray();
-        return arr;
+        return arr[0] ? lodash.pick(arr[0], keys) : null;
     }
 }
 
