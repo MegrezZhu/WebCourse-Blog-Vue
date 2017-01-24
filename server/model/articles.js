@@ -35,9 +35,9 @@ class Articles {
         this.comm = db.collection('articles.comments');
     }
 
-    async count() {
+    async count(param) {
         return this.arti
-                   .find()
+                   .find(param)
                    .count();
     }
 

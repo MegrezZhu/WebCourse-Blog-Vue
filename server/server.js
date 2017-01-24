@@ -25,7 +25,7 @@ module.exports = function (db) {
     // for future usage
     app.locals.db = database;
 
-    // app.use(favicon(path.join(__dirname, '../app/images/favicon.jpg')));
+    app.use(favicon(path.join(__dirname, '../app/public/assets/favicon.jpg')));
     app.use(logger('dev'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));

@@ -34,11 +34,9 @@ router
         try {
             let total = await arti.count();
             let {from, to} = info;
-            console.log(from, to, total);
             if (to > total) to = total;
             from = total - from + 1;
             to = total - to + 1;
-            console.log(from, to, total);
             let arr = await arti.getArticles(info.param, info.keys, from - Number(to) + 1, to - 1);
             res.json(arr);
         } catch (err) {
@@ -118,6 +116,15 @@ router
         } catch (err) {
             next(err);
         }
-    });
+    })
+    .post('/count', async function (req, res, next) {
+        try {
+            let {param} = req.body,
+                db = req.app.locals.db.articles;
+            res.json(await db.count(param));
+        } catch (err) {
+            next(err);
+        }
+    })
 
 module.exports = router;

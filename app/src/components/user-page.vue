@@ -16,12 +16,17 @@
                             <span class="mail">{{info.mail}}</span>
                         </p>
                         <div>
-                            <el-button type="text" class="edit-button"><i class="fa fa-edit"></i>编辑个人资料</el-button>
+                            <el-button v-if="false" type="text" class="edit-button"><i class="fa fa-edit"></i>编辑个人资料
+                            </el-button>
                         </div>
                     </div>
                 </div>
             </el-card>
-            <el-card v-loading="loading"></el-card>
+            <div v-loading="articlesLoading" style="width: 100%">
+                <my-article-list :data="data | reverse" v-loading="articlesLoading"></my-article-list>
+                <el-pagination layout="prev,pager,next" :total="total || 0"
+                               :page-size="10" @current-change="changePage"></el-pagination>
+            </div>
         </div>
     </my-body>
 </template>
@@ -30,30 +35,45 @@
     import axios from 'axios';
     import myBody from './body-framework.vue';
     import myAvatar from './avatar.vue';
+    import myArticleList from './article-list.vue';
     export default {
-//        props: {
-//            uid: {type: String}
-//        },
         data(){
             return {
                 loading: false,
+                articlesLoading: false,
                 info: {},
-                uid: ''
+                data: [],
+                total: 0
             };
         },
         computed: {
             isSelf() {
                 return this.$store.state.user.id === this.uid;
+            },
+            uid() {
+                return this.$route.params.uid;
             }
         },
         watch: {
             '$route': function ({params: {uid}}) {
-                console.log(`changed to ${uid}`);
-                this.fetchInfo(uid);
+                this.fetchAll();
             }
         },
         methods: {
-            fetchInfo(uid){
+            fetchAll() {
+                this.fetchArtiNum();
+                this.fetchUserInfo(this.uid);
+                this.fetchUserArti();
+            },
+            fetchArtiNum() {
+                axios
+                    .post('/api/articles/count', {param: {'author.id': this.uid}})
+                    .then(({data}) => {
+                        this.total = data;
+                    })
+                    .catch(err => this.$notify.error({title: '未知错误', duration: 1000}));
+            },
+            fetchUserInfo(uid){
                 if (!uid) return;
                 let vm = this;
                 vm.info = {};
@@ -78,13 +98,33 @@
                             vm.loading = false;
                         })
                 }
-
+            },
+            changePage(page) {
+                this.fetchUserArti(page);
+            },
+            fetchUserArti(page = 1) {
+                let v = this;
+                v.articlesLoading = true;
+                axios
+                    .post('/api/articles/get', {
+                        param: {'author.id': v.uid},
+                        keys: ['_id', 'hide']
+                    })
+                    .then(({data}) => {
+                        data.forEach(arti => arti.id = arti._id);
+                        v.articlesLoading = false;
+                        v.data = data;
+                    })
+                    .catch(err => {
+                        v.articlesLoading = false;
+                        v.$notify.error({title: '未知错误', duration: 1000});
+                    })
             }
         },
         created() {
-            this.fetchInfo(this.$route.params.uid);
+            this.fetchAll();
         },
-        components: {myBody, myAvatar}
+        components: {myBody, myAvatar, myArticleList}
     }
 </script>
 

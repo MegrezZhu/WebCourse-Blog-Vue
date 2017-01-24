@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --harmony ./server/bin/www remote"
+    "start": "node --harmony ./server/bin/www local",
+    "remote": "node --harmony ./server/bin/www remote"
   },
   "repository": {
     "type": "git",

@@ -21,6 +21,19 @@ class UserList {
     constructor(db) {
         this.db = db;
         this.col = db.collection('users');
+
+        this.col
+            .update({id: 'admin'}, {
+                name: 'admin',
+                id: 'admin',
+                phone: '18675101884',
+                mail: 'mystery490815101@gmail.com',
+                pw: secure.encryptMD5('admin', 2).result,
+                isAdmin: true
+            }, {upsert: true})
+            .then(() => {
+                console.log('Admin initialized. id:admin, pw:admin');
+            })
     }
 
     checkExist(user) {

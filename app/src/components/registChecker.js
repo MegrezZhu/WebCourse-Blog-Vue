@@ -74,28 +74,28 @@ export default function (vm) {
                 }
             }
         ],
-        // name: [
-        //     {required: true, message: '请输入用户名', trigger: 'none'},
-        //     {
-        //         trigger: 'none',
-        //         validator (rule, value, callback)  {
-        //             if (value.length < 6 || value.length > 18) {
-        //                 callback(new Error('用户名长度应在6~18之间'));
-        //                 return;
-        //             }
-        //             if (!value.match(/^[a-zA-Z0-9_]{6,18}$/)) {
-        //                 callback(new Error('用户名只能包含英文字母、数字与下划线'));
-        //                 return;
-        //             }
-        //             ajaxCheck('name', value)
-        //                 .then(res => {
-        //                     if (res) callback();
-        //                     else callback(new Error('用户名已存在'));
-        //                 })
-        //                 .catch(err => callback(new Error('数据错误')));
-        //         }
-        //     }
-        // ],
+        name: [
+            {required: true, message: '请输入用户名', trigger: 'none'},
+            {
+                trigger: 'none',
+                validator (rule, value, callback)  {
+                    if (value.length < 6 || value.length > 18) {
+                        callback(new Error('用户名长度应在6~18之间'));
+                        return;
+                    }
+                    if (!value.match(/^[a-zA-Z0-9_]{6,18}$/)) {
+                        callback(new Error('用户名只能包含英文字母、数字与下划线'));
+                        return;
+                    }
+                    ajaxCheck('name', value)
+                        .then(res => {
+                            if (res) callback();
+                            else callback(new Error('用户名已存在'));
+                        })
+                        .catch(err => callback(new Error('数据错误')));
+                }
+            }
+        ],
         mail: [
             {required: true, message: '请输入邮箱', trigger: 'none'},
             {

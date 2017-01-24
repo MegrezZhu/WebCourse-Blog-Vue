@@ -17,8 +17,9 @@ const encryptMD5 = function (data, times = 1) {
         let gen = crypto.createHash('md5');
         gen.update(data);
         let result = gen.digest('hex');
-        return {result};
+        data = result;
     }
+    return {result: data};
 };
 
 const check = function () {

@@ -20,7 +20,8 @@ router
                          } else {
                              res.json(null);
                          }
-                     });
+                     })
+                    .catch(err => next(err));
             } else {
                 res.json(null);
             }
