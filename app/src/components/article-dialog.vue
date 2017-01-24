@@ -45,6 +45,7 @@
             },
             submit(){
                 let vm = this;
+                if (!vm.form.title || !vm.form.content) return;
                 vm.loading = true;
                 axios
                     .post('/api/articles/new', {
@@ -54,9 +55,10 @@
                     })
                     .then(({data}) => {
                         vm.$notify.success({title: '发布成功', duration: 1000});
-                        vm.$refs.articleForm.reset();
-                        vm.$store.commit('dialog', {name: 'article',to:false});
+//                        vm.$refs.articleForm.reset();
+                        vm.$store.commit('dialog', {name: 'article', to: false});
                         vm.loading = false;
+                        vm.$emit('newArticle', data);
                     })
                     .catch(() => {
                         vm.$notify.error({title: '未知错误', duration: 1000});

@@ -44,10 +44,10 @@
             loading: false,
             rules: {
                 id: [
-                    {required: true, message: '请输入用户名', trigger: 'blur'}
+                    {required: true, message: '请输入用户名', trigger: 'none'}
                 ],
                 pw: [
-                    {required: true, message: '请输入密码', trigger: 'blur'}
+                    {required: true, message: '请输入密码', trigger: 'none'}
                 ]
             }
         }),

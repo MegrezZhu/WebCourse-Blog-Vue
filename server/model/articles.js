@@ -82,11 +82,13 @@ class Articles {
 
     async removeArticle(articleId) {
         let {comments} = await this.arti
-                                   .find({_id: new ObjectID(articleId)}, {comments: 1});
-        let param = {$or: []};
-        comments.forEach(commId => param.$or.push(new ObjectID(commId)));
-        await this.comm
-                  .removeMany(param);
+                                   .findOne({_id: new ObjectID(articleId)}, {comments: 1});
+        if (comments.length) {
+            let param = {$or: []};
+            comments.forEach(commId => param.$or.push({_id: new ObjectID(commId)}));
+            await this.comm
+                      .removeMany(param);
+        }
         await this.arti
                   .removeOne({_id: new ObjectID(articleId)});
     }

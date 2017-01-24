@@ -22,6 +22,10 @@ Vue.component('splitter', splitter);
 Vue.component('user-link', userLink);
 Vue.component('my-time', timer);
 
+Vue.filter('reverse', function(arr) {
+    return arr.slice().reverse();
+})
+
 // assign Vue instance to windows for console debugging
 window.Vue = new Vue({
     el: '#app',

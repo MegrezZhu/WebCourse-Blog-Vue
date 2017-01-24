@@ -52,7 +52,7 @@
         computed: {
             title() {
                 let vm = this;
-                if (vm.data.title.length > 15) {
+                if (vm.data.title && vm.data.title.length > 15) {
                     return vm.data.title.substr(0, 15) + '...';
                 } else {
                     return vm.data.title;

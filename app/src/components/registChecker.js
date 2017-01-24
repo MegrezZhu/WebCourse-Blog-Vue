@@ -19,9 +19,9 @@ const ajaxCheck = function (name, value) {
 export default function (vm) {
     return {
         id: [
-            {required: true, message: '请输入账号', trigger: 'blur'},
+            {required: true, message: '请输入账号', trigger: 'none'},
             {
-                trigger: 'blur',
+                trigger: 'none',
                 validator (rule, value, callback)  {
                     if (value.length < 6 || value.length > 18) {
                         callback(new Error('账号长度应在6~18之间'));
@@ -45,9 +45,9 @@ export default function (vm) {
             }
         ],
         pw: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
+            {required: true, message: '请输入密码', trigger: 'none'},
             {
-                trigger: 'blur',
+                trigger: 'none',
                 validator (rule, value, callback)  {
                     if (value.length < 6 || value.length > 12) {
                         callback(new Error('密码长度应在6~12之间'));
@@ -62,9 +62,9 @@ export default function (vm) {
             }
         ],
         checkpw: [
-            {required: true, message: '请再次输入密码', trigger: 'blur'},
+            {required: true, message: '请再次输入密码', trigger: 'none'},
             {
-                trigger: 'blur',
+                trigger: 'none',
                 validator(rule, value, callback){
                     if (vm.form.pw !== value) {
                         callback(new Error('两次输入密码不一致'));
@@ -75,9 +75,9 @@ export default function (vm) {
             }
         ],
         // name: [
-        //     {required: true, message: '请输入用户名', trigger: 'blur'},
+        //     {required: true, message: '请输入用户名', trigger: 'none'},
         //     {
-        //         trigger: 'blur',
+        //         trigger: 'none',
         //         validator (rule, value, callback)  {
         //             if (value.length < 6 || value.length > 18) {
         //                 callback(new Error('用户名长度应在6~18之间'));
@@ -97,9 +97,9 @@ export default function (vm) {
         //     }
         // ],
         mail: [
-            {required: true, message: '请输入邮箱', trigger: 'blur'},
+            {required: true, message: '请输入邮箱', trigger: 'none'},
             {
-                trigger: 'blur',
+                trigger: 'none',
                 validator (rule, value, callback)  {
                     if (!value.match(/^[a-zA-Z0-9_\\-]+@(([a-zA-Z0-9_\-])+\.)+[a-zA-Z]{2,4}$/)) {
                         callback(new Error('邮箱格式不正确'));
@@ -116,7 +116,7 @@ export default function (vm) {
         ],
         phone: [
             {
-                trigger: 'blur',
+                trigger: 'none',
                 validator (rule, value, callback)  {
                     if (value === '') {
                         callback();

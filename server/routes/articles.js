@@ -32,7 +32,14 @@ router
         let info = req.body,
             arti = req.app.locals.db.articles;
         try {
-            let arr = await arti.getArticles(info.param, info.keys, info.to ? info.to - Number(info.from) + 1 : undefined, info.from - 1);
+            let total = await arti.count();
+            let {from, to} = info;
+            console.log(from, to, total);
+            if (to > total) to = total;
+            from = total - from + 1;
+            to = total - to + 1;
+            console.log(from, to, total);
+            let arr = await arti.getArticles(info.param, info.keys, from - Number(to) + 1, to - 1);
             res.json(arr);
         } catch (err) {
             next(err);
@@ -69,13 +76,13 @@ router
     })
     .post('/edit', async function (req, res, next) {
         try {
-            let {id, content} = req.body,
+            let {id, content, title} = req.body,
                 user = res.locals.user,
                 db = req.app.locals.db.articles;
             if (!await authorize(user, id, db)) {
                 res.json(false);
             } else {
-                let result = await db.editArticle(id, {content});
+                let result = await db.editArticle(id, {content, title});
                 res.json(true);
             }
         } catch (err) {
@@ -97,5 +104,20 @@ router
             next(err);
         }
     })
+    .post('/search', async function (req, res, next) {
+        try {
+            let {query} = req.body,
+                db = req.app.locals.db.articles,
+                user = res.locals.user;
+            let param = {
+                title: {$regex: query},
+                hide: user.isAdmin ? undefined : false
+            };
+            let arr = await db.getArticles(param, ['title', 'id', 'author'], 100);
+            res.json(arr);
+        } catch (err) {
+            next(err);
+        }
+    });
 
 module.exports = router;
