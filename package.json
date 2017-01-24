@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --harmony ./server/bin/www local",
-    "remote": "node --harmony ./server/bin/www remote"
+    "remote": "node --harmony ./server/bin/www remote",
+    "build": "webpack --progress"
   },
   "repository": {
     "type": "git",
