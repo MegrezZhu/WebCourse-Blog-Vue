@@ -4,6 +4,7 @@ Just an assignment.
 #Description
 1. Front-end：Vue.js + Element-UI
 2. backend：Express
+3. Node.js 7.0.0+ required
 #Launch
 ##Build
 1. `npm install`
