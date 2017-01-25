@@ -12,7 +12,7 @@ if (process.argv[2] == 'remote') {
     url = `mongodb://${username}:${pw}@${host}:${port}/${dbName}?authSource=admin`;
 } else {
     if (process.argv[2] == 'local') {
-        url = `mongodb://localhost:27017/signin`;
+        url = `mongodb://localhost:27017/blog`;
     }
     else throw new Error(`required parameter 'remote' or 'local'`);
 }

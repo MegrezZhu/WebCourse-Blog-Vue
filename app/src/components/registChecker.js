@@ -79,12 +79,12 @@ export default function (vm) {
             {
                 trigger: 'none',
                 validator (rule, value, callback)  {
-                    if (value.length < 6 || value.length > 18) {
-                        callback(new Error('用户名长度应在6~18之间'));
+                    if (value.length < 1 || value.length > 18) {
+                        callback(new Error('用户名长度应在1~18之间'));
                         return;
                     }
-                    if (!value.match(/^[a-zA-Z0-9_]{6,18}$/)) {
-                        callback(new Error('用户名只能包含英文字母、数字与下划线'));
+                    if (!value.match(/^[a-zA-Z0-9_\u4E00-\u9FA5]{1,18}$/)) {
+                        callback(new Error('用户名只能包含中英文、数字与下划线'));
                         return;
                     }
                     ajaxCheck('name', value)

@@ -23,7 +23,7 @@ class UserList {
         this.col = db.collection('users');
 
         this.col
-            .update({id: 'admin'}, {
+            .updateOne({id: 'admin'}, {
                 name: 'admin',
                 id: 'admin',
                 phone: '18675101884',
@@ -38,8 +38,9 @@ class UserList {
 
     checkExist(user) {
         let param = {
-            $or: [{name: user.name}, {id: user.id}, {phone: user.phone}, {mail: user.mail}]
+            $or: [{name: user.name}, {id: user.id}, {mail: user.mail}]
         };
+        if (user.phone) param.$or.push({phone: user.phone});
         return this.col
                    .find(param)
                    .count()
@@ -64,7 +65,6 @@ class UserList {
 
     login(id, password) {
         let _password = secure.encryptMD5(password).result;
-        console.log(`pre:${password}, after:${_password}`);
         return this.getUser({id, pw: _password});
         // 登录成功也返回user实例
     }
