@@ -109,7 +109,7 @@ router
                 user = res.locals.user;
             let param = {
                 title: {$regex: query},
-                hide: user.isAdmin ? undefined : false
+                hide: (user && user.isAdmin) ? undefined : false
             };
             let arr = await db.getArticles(param, ['title', 'id', 'author'], 100);
             res.json(arr);
